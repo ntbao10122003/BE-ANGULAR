@@ -1,10 +1,12 @@
 import Joi from "joi";
 import Product from "../models/product";
+import Category from "../models/category";
 
 const productSchema = Joi.object({
     name: Joi.string().required(),
     price: Joi.string().required(),
     description: Joi.string().required(),
+    categoryId: Joi.string().required(),
 });
 
 export const getAll = async (req, res) => {
@@ -34,7 +36,8 @@ export const getAll = async (req, res) => {
 };
 export const get = async (req, res) => {
     try {
-        const data = await Product.findById(req.params.id);
+        const id = req.params.id;
+        const data = await Product.findOne({ _id: id }).populate("categoryId", "-__v");
         if (data.length === 0) {
             return res.status(200).json({
                 message: "Không có sản phẩm",
@@ -57,6 +60,13 @@ export const create = async (req, res) => {
             });
         }
         const product = await Product.create(body);
+
+        await Category.findByIdAndUpdate(product.categoryId, {
+            $addToSet: {
+                products: product._id,
+            },
+        });
+
         if (product.length === 0) {
             return res.status(400).json({
                 message: "Thêm sản phẩm thất bại",

@@ -6,10 +6,14 @@ const productSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-    price: String,
+    price: Number,
     description: {
       type: String
     },
+    categoryId: {
+        type: mongoose.Types.ObjectId,
+        ref: "Category",
+      },
   },
   { timestamps: true, versionKey: false }
 );
