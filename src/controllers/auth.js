@@ -1,6 +1,6 @@
 import Auth from "../models/auth";
 import bcrypt from "bcryptjs";
-import { signupSchema } from "../schemas/auth";
+import { signinSchema, signupSchema } from "../schemas/auth";
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
@@ -38,4 +38,38 @@ export const signup = async (req, res) => {
       message: error,
     });
   }
+};
+
+export const signin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const { error } = signinSchema.validate(req.body, { abortEarly: false });
+        if (error) {
+            const errors = error.details.map((err) => err.message);
+            return res.status(400).json({
+                messages: errors,
+            });
+        }
+
+        const auth = await Auth.findOne({ email });
+        if (!auth) {
+            return res.status(404).json({
+                message: "Tài khoản không tồn tại",
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, auth.password);
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Mật khẩu không đúng",
+            });
+        }
+        const token = jwt.sign({ id: auth._id }, "ManhLD", { expiresIn: "1d" });
+        return res.status(200).json({
+            message: "Đăng nhập thành công",
+            accessToken: token,
+            auth,
+        });
+    } catch (error) {}
 };
