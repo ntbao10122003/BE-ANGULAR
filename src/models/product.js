@@ -6,9 +6,25 @@ const productSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-    price: Number,
-    description: {
-      type: String
+    price: { 
+      type: Number,
+      require: true
+    },
+    shortDesc: {
+      type: String,
+      require: true
+    },
+    longDesc: {
+      type: String,
+      require: true
+    },
+    brand: {
+      type: String,
+      require: true
+    },
+    images: {
+      type: String,
+      require: true
     },
     categoryId: {
         type: mongoose.Types.ObjectId,
