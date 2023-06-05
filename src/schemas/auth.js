@@ -20,6 +20,11 @@ export const signupSchema = joi.object({
         "string.empty": "Mật khẩu không được để trống",
         "any.required": "Trường mật khẩu là bắt buộc",
     }),
+    phone: joi.number().min(10).required().messages({
+        "string.empty": "Số điện thoại không được bỏ trống",
+        "any.empty" :"Số điện thoại là bắt buộc",
+        "string.min":"Số điện thoại phải có ít nhất{#limit} số"
+    })
 });
 export const signinSchema = joi.object({
     email: joi.string().email().required().messages({

@@ -14,6 +14,10 @@ const authSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  phone: {
+    type: Number,
+    require: true,
+  },
   role: {
     type: String,
     default: "member",
