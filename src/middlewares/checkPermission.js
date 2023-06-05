@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken";
-import Auth from "../models/auth";
 
 export const checkPermission = async (req, res, next) => {
     try {
@@ -13,20 +11,20 @@ export const checkPermission = async (req, res, next) => {
         jwt.verify(token, "ManhLD", async (error, payload) => {
             console.log("error", error);
             if (error) {
-                if (error.name === "TokenExpiredError") {
-                    return res.json({
-                        message: "Token hết hạn",
-                    });
-                }
-                if (error.name === "JsonWebTokenError") {
+                if (error.name == "TokenExpiredError") {
                     return res.json({
                         message: "Token không hợp lệ",
+                    });
+                }
+                if (error.name == "TokenExpiredError") {
+                    return res.json({
+                        message: "Token hết hạn",
                     });
                 }
             }
             const auth = await Auth.findById(payload.id);
             console.log(auth);
-            if (!auth || auth.role !== "admin") {
+            if (!auth && auth.role !== "admin") {
                 return res.status(403).json({
                     message: "Bạn không có quyền truy cập tài nguyên!",
                 });
