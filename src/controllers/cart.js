@@ -30,7 +30,7 @@ export const createCart = async (req, res) => {
 
 export const createCartItem = async (req, res) => {
     const { cartId } = req.params;
-    const { productId, name, price, quantity } = req.body;
+    const { productId, name, price, quantity, images } = req.body;
 
     try {
         // Kiểm tra xem giỏ hàng có tồn tại hay không
@@ -45,7 +45,8 @@ export const createCartItem = async (req, res) => {
             productId,
             name,
             price,
-            quantity
+            quantity,
+            images
         };
         cart.items.push(newItem);
 
